@@ -1,5 +1,6 @@
 import math
 import random
+import numpy
 
 high_lf = int(input("max lf? \n : "))
 low_lf = int(input("min LF? \n : "))
@@ -31,7 +32,22 @@ def cal_engineering(_material):
     if engineering < 3000:
         engineering = 3000
     return engineering
+
+
+
+def cal_adv_engineering(_total):
+    st = float(_total/5737.7)
+    res = float(numpy.log10(st)/.05294)
+    res = round((25 * (.905) ** (res)),2)
+    result = _total * (res / 100)
+    print(result)
+
+
     
+def cal_drafting(_engineering):
+    drafting = _engineering *1.5
+    return drafting
+
 
 
 def cal_field(_lf,_rate):
