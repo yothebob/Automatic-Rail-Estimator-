@@ -78,13 +78,18 @@ def cal_total(_lf,_field,_material,_engineering,project_type):
 
 
 def start():
-    user = input("What do you want to do? \n type 'data' to run est simulation \n type 'end' to close program \n type 'quote' to make a quote \n : ")
+    user = input("What do you want to do? \n type 'data' to run est simulation \n type 'end' to close program \n type 'quote' to make a quote \n type 'pricing' for price per panel \n : ")
     if user.lower() == "data":
         run_sim()
     elif user.lower() == "end":
         sys.exit()
     elif user.lower() == "quote":
         get_estimate()
+    elif user.lower() == "pricing":
+        print("price per panel: \n picket = 126 for fascia, 113 for surface. 8 for corners \n glass = 268 for fascia, 256 surface , 8 for corners \n BaseShoe = 566 per 4' panel, 306 per corner ")
+        print()
+        print()
+        start()
     else:
         print("Sorry, I did not understand. Please try again...")
         start()
