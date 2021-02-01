@@ -1,0 +1,118 @@
+import math
+import random
+
+high_lf = int(input("max lf? \n : "))
+low_lf = int(input("min LF? \n : "))
+high_corners = math.ceil(high_lf / 10)
+low_corners = 1
+spacing = int(input("What is the panel spacing? \n : "))
+panel_cost = int(input("What is typical cost per panel? \n : "))
+corner_cost = int(input("What are additional costs needed for a corner? \n : "))
+high_install_rate = int(input("what is the optimistic install rate? \n : "))
+low_install_rate = int(input("what is the lowest install rate? \n : "))
+iterations = int(input("How many gens would you like to run? \n : "))
+project_type = int(input("what project type? 1-5 \n: "))
+
+install_rates = []
+lfs = []
+totals = []
+corners = []
+per_lfs = []
+
+def cal_materials(_spacing,_corners,_lf,_panel_cost,_corner_cost):
+    total = (_corners * _corner_cost) + ((_lf / _spacing) * _panel_cost)
+    return total
+
+
+
+def cal_engineering(_material):
+    cogs = .0425
+    engineering = _material * cogs
+    if engineering < 3000:
+        engineering = 3000
+    return engineering
+    
+
+
+
+def cal_field(_lf,_rate):
+    labor_cost = 34.68
+    workers = 2
+    return ((((_lf / _rate)*8) * labor_cost)* workers)
+
+
+
+def cal_total(_lf,_field,_material,_engineering,project_type):
+    cogs_pre = 0
+    indirect_pre = 0
+
+    
+
+    if project_type == 1:
+        cogs_pre = .054
+        indirect_pre = .8259
+    elif project_type == 2:
+        cogs_pre = .044
+        indirect_pre = .7813
+    elif project_type == 3:
+        cogs_pre = .1680
+        indirect_pre = .7451
+    elif project_type == 4:
+        cogs_pre = 1
+        indirect_pre = .7432
+    elif project_type == 5:
+        cogs_pre = .11
+        indirect_pre = .7432
+
+
+
+    cogs_supplies = math.ceil(_material * cogs_pre)
+    direct_burden = math.ceil(_field * .16)
+    total_direct = math.ceil(_field + _material + cogs_supplies + _engineering + direct_burden)
+
+    indirect = math.ceil(total_direct * indirect_pre)
+
+    total_expenses = total_direct + indirect
+
+    profit = math.ceil(total_expenses * .176454)
+
+    total = math.ceil(total_expenses + profit)
+
+    #print("Direct: " + str(total_direct))
+    #print("Indirect: " + str(indirect))
+    #print("Expenses: " + str(total_expenses))
+    #print("profit: " + str(profit))
+    print("Total: " + str(total))
+    return total
+
+
+for gen in range(iterations):
+    gen_lf = random.randrange(low_lf,high_lf)
+    gen_corners = random.randrange(low_corners,high_corners)
+    gen_install_rate = random.randrange(low_install_rate, high_install_rate)
+
+    gen_materials = cal_materials(spacing,gen_corners,gen_lf,panel_cost,corner_cost)
+    gen_engineering = cal_engineering(gen_materials)
+    gen_field = cal_field(gen_lf,gen_install_rate)
+    gen_total = cal_total(gen_lf,gen_field,gen_materials,gen_engineering,project_type)
+    print("Gen LF: " + str(gen_lf))
+    print("Corners: " + str(gen_corners))
+    print("LF/ day: " + str(gen_install_rate))
+    print()
+    print()
+    install_rates.append(gen_install_rate)
+    lfs.append(gen_lf)
+    corners.append(gen_corners)
+    totals.append(gen_total)
+    per_lfs.append(round(gen_total/gen_lf))
+
+
+file = open("estimates.csv","w")
+with file:
+    file.write("LF ," + str(lfs) + "\n ")
+    file.write("RATES ," + str(install_rates) + "\n")
+    file.write("CORNERS ," + str(corners) + "\n")
+    file.write("TOTAL ," + str(totals) + "\n")
+    file.write("$/LF ," + str(per_lfs) + "\n")
+    file.close()
+
