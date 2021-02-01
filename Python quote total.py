@@ -3,7 +3,7 @@ import random
 
 high_lf = int(input("max lf? \n : "))
 low_lf = int(input("min LF? \n : "))
-high_corners = math.ceil(high_lf / 10)
+high_corners = math.ceil(high_lf / 100)
 low_corners = 1
 spacing = int(input("What is the panel spacing? \n : "))
 panel_cost = int(input("What is typical cost per panel? \n : "))
@@ -34,7 +34,6 @@ def cal_engineering(_material):
     
 
 
-
 def cal_field(_lf,_rate):
     labor_cost = 34.68
     workers = 2
@@ -45,8 +44,6 @@ def cal_field(_lf,_rate):
 def cal_total(_lf,_field,_material,_engineering,project_type):
     cogs_pre = 0
     indirect_pre = 0
-
-    
 
     if project_type == 1:
         cogs_pre = .054
@@ -63,8 +60,6 @@ def cal_total(_lf,_field,_material,_engineering,project_type):
     elif project_type == 5:
         cogs_pre = .11
         indirect_pre = .7432
-
-
 
     cogs_supplies = math.ceil(_material * cogs_pre)
     direct_burden = math.ceil(_field * .16)
@@ -84,6 +79,8 @@ def cal_total(_lf,_field,_material,_engineering,project_type):
     #print("profit: " + str(profit))
     print("Total: " + str(total))
     return total
+
+
 
 
 for gen in range(iterations):
