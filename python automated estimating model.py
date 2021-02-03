@@ -40,7 +40,7 @@ def cal_field(_lf,_rate):
 
 
 
-def cal_total(_lf,_field,_material,_engineering,project_type):
+def cal_total(_lf,_field,_material,_engineering,project_type,_drafting):
     cogs_pre = 0
     indirect_pre = 0
 
@@ -62,7 +62,7 @@ def cal_total(_lf,_field,_material,_engineering,project_type):
 
     cogs_supplies = math.ceil(_material * cogs_pre)
     direct_burden = math.ceil(_field * .16)
-    total_direct = math.ceil(_field + _material + cogs_supplies + _engineering + direct_burden)
+    total_direct = math.ceil(_field + _material + cogs_supplies + _engineering + direct_burden + _drafting)
     indirect = math.ceil(total_direct * indirect_pre)
     total_expenses = total_direct + indirect
     profit = math.ceil(total_expenses * .176454)
@@ -113,8 +113,9 @@ def get_estimate():
     
     material_cost = cal_materials(spacing,corner,lf,panel_cost,corner_cost)
     engineering_cost = cal_engineering(material_cost)
+    drafting_cost = 1500
     labor_cost = cal_field(lf,install_rate)
-    total = cal_total(lf,labor_cost,material_cost,engineering_cost,project_type)
+    total = cal_total(lf,labor_cost,material_cost,engineering_cost,project_type,drafting_cost)
 
     print("Job LF: " + str(lf))
     print("$/LF : " + str(round(total/lf)))
@@ -152,8 +153,9 @@ def run_sim():
 
         gen_materials = cal_materials(spacing,gen_corners,gen_lf,panel_cost,corner_cost)
         gen_engineering = cal_engineering(gen_materials)
+        gen_drafting = 1500
         gen_field = cal_field(gen_lf,gen_install_rate)
-        gen_total = cal_total(gen_lf,gen_field,gen_materials,gen_engineering,project_type)
+        gen_total = cal_total(gen_lf,gen_field,gen_materials,gen_engineering,project_type,gen_drafting)
         print("Gen LF: " + str(gen_lf))
         print("Corners: " + str(gen_corners))
         print("LF/ day: " + str(gen_install_rate))
