@@ -14,7 +14,8 @@ def cal_engineering(_material):
     engineering = _material * cogs
     if engineering < 3000:
         engineering = 3000
-    return engineering
+    drafting = engineering * 1.5
+    return engineering,drafting
 
 
 
@@ -26,11 +27,16 @@ def cal_adv_engineering(_total):
     print(result)
 
 
-        
-def cal_drafting(_engineering):
-    drafting = _engineering *1.5
-    return drafting
 
+def cal_manual_eng(_material):
+    pick_engineering = input('type "m" for eng/draft manual entry, type "s" for standard model rates')
+    if pick_engineering.lower() == "m":
+        eng = int(input('how much for engineering?'))
+        draft = int(input('how much for drafting?'))
+        return eng,draft
+    elif pick_engineering.lower() == "s":
+        return cal_engineering(_material)
+        
 
 
 def cal_field(_lf,_rate):
@@ -67,7 +73,10 @@ def cal_total(_lf,_field,_material,_engineering,project_type,_drafting):
     total_expenses = total_direct + indirect
     profit = math.ceil(total_expenses * .176454)
     total = math.ceil(total_expenses + profit)
-
+    #print("Materials: " + str(_material))
+    #print("Labor: "+ str(_field))
+    print("Engineering: " + str(_engineering))
+    print("Drafting: " + str(_drafting))
     print("Direct: " + str(total_direct))
     print("Indirect: " + str(indirect))
     print("Expenses: " + str(total_expenses))
@@ -102,7 +111,7 @@ def get_estimate():
     
     lf = int(input(" Job LF? : "))
     corner = int(input("number of corners? : "))
-    spacing = int(input("post spacing? : "))
+    spacing = float(input("post spacing? : "))
     panel_cost = int(input("typ cost per panel : "))
     corner_cost = int(input("additional cost for corners? : "))
     install_rate = int(input("LF per day install rate? : "))
@@ -112,8 +121,7 @@ def get_estimate():
     print()
     
     material_cost = cal_materials(spacing,corner,lf,panel_cost,corner_cost)
-    engineering_cost = cal_engineering(material_cost)
-    drafting_cost = 1500
+    engineering_cost,drafting_cost = cal_manual_eng(material_cost)
     labor_cost = cal_field(lf,install_rate)
     total = cal_total(lf,labor_cost,material_cost,engineering_cost,project_type,drafting_cost)
 
@@ -132,7 +140,7 @@ def run_sim():
     low_lf = int(input("min LF? \n : "))
     high_corners = math.ceil(high_lf / 100)
     low_corners = 1
-    spacing = int(input("What is the panel spacing? \n : "))
+    spacing = float(input("What is the panel spacing? \n : "))
     panel_cost = int(input("What is typical cost per panel? \n : "))
     corner_cost = int(input("What are additional costs needed for a corner? \n : "))
     high_install_rate = int(input("what is the optimistic install rate? \n : "))
@@ -160,7 +168,6 @@ def run_sim():
         print("Corners: " + str(gen_corners))
         print("LF/ day: " + str(gen_install_rate))
         print()
-        print()
         install_rates.append(gen_install_rate)
         lfs.append(gen_lf)
         corners.append(gen_corners)
@@ -168,6 +175,15 @@ def run_sim():
         per_lfs.append(round(gen_total/gen_lf))
 
     file = open("estimates.csv","w")
+    sim_avg_lf = numpy.average(per_lfs)
+    sim_std_lf = numpy.std(per_lfs)
+    sim_med_lf = numpy.median(per_lfs)
+
+    print("average: " + str(sim_avg_lf))
+    print("std dev: " + str(sim_std_lf))
+    print("median: " + str(sim_med_lf))
+    print()
+    print()
     with file:
         file.write("LF ," + str(lfs) + "\n ")
         file.write("RATES ," + str(install_rates) + "\n")
