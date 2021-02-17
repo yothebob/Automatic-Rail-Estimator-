@@ -73,8 +73,8 @@ def cal_total(_lf,_field,_material,_engineering,project_type,_drafting):
     total_expenses = total_direct + indirect
     profit = math.ceil(total_expenses * .176454)
     total = math.ceil(total_expenses + profit)
-    #print("Materials: " + str(_material))
-    #print("Labor: "+ str(_field))
+    print("Materials: " + str(_material))
+    print("Labor: "+ str(_field))
     print("Engineering: " + str(_engineering))
     print("Drafting: " + str(_drafting))
     print("Direct: " + str(total_direct))
@@ -160,8 +160,7 @@ def run_sim():
         gen_install_rate = random.randrange(low_install_rate, high_install_rate)
 
         gen_materials = cal_materials(spacing,gen_corners,gen_lf,panel_cost,corner_cost)
-        gen_engineering = cal_engineering(gen_materials)
-        gen_drafting = 1500
+        gen_engineering,gen_drafting = cal_engineering(gen_materials)
         gen_field = cal_field(gen_lf,gen_install_rate)
         gen_total = cal_total(gen_lf,gen_field,gen_materials,gen_engineering,project_type,gen_drafting)
         print("Gen LF: " + str(gen_lf))
